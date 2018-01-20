@@ -1,0 +1,12 @@
+{
+  "name": "code-splitting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack"
+  },
+  "devDependencies": {
+    "webpack": "^3.10.0"
+  }
+}
