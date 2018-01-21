@@ -53,7 +53,7 @@ module.exports = {
   },
   output: {
     filename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'public')
   }
 };
 ```
@@ -70,7 +70,7 @@ function loadApp(appName) {
   script.onload = () => {
     console.log(`${appName} loaded`);
   };
-  script.src = `dist/${appName}.bundle.js`;
+  script.src = `${appName}.bundle.js`;
   document.head.appendChild(script);
 }
 ```
@@ -132,7 +132,7 @@ module.exports = {
 ```html
 <head>
   …
-  <script src="dist/common.bundle.js"></script>
+  <script src="common.bundle.js"></script>
   …
 </head>
 ```

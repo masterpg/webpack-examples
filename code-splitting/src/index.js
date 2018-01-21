@@ -13,6 +13,6 @@ function loadApp(appName) {
   script.onload = () => {
     console.log(`${appName} loaded`);
   };
-  script.src = `dist/${appName}.bundle.js`;
+  script.src = `${appName}.bundle.js`;
   document.head.appendChild(script);
 }
