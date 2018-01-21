@@ -1,3 +1,3 @@
-export default () => {
-  console.log('utils1');
+export default (user) => {
+  console.log(`utils1 is used by ${user}`);
 }
