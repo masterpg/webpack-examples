@@ -1,0 +1,14 @@
+{
+  "name": "code-splitting",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack",
+    "serve": "npm run build && ./node_modules/.bin/browser-sync start --server './public' --files './public' --port 5000 --no-open"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.23.5",
+    "webpack": "^3.10.0"
+  }
+}
