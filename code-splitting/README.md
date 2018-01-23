@@ -1,4 +1,4 @@
-# code-splitting
+# Code Splitting
 
 ## ファイル分割がなぜ必要なのか
 
@@ -18,7 +18,7 @@ import app4 from './app4';
 個々のアプリケーションはユーザーの操作によって切り替えられるので、本来なら切り替えられるまで対象のアプリケーションをロードする必要はありません。
 
 
-ただしこれを普通にwebpackすると、次のようにすべてのアプリケーションがバンドルされた巨大な `index.bundle.js` が生成されてしまいます。
+ただしこれを普通に webpack すると、次のようにすべてのアプリケーションがバンドルされた巨大な `index.bundle.js` が生成されてしまいます。
 
 ![](docs/images/app-structure-2.png)
 
@@ -37,7 +37,7 @@ import app4 from './app4';
 
 そこで、各アプリケーションを個々のファイルとしてバンドルし、`index.js` ではアプリケーションをインポートせずに、ユーザーの操作によって対象のアプリケーションをロードするようにしましょう。
 
-まずは各アプリケーションを個々のファイルとしてバンドルします。次のような `webpack.config.js` を用意し、webpackを実行します。
+まずは各アプリケーションを個々のファイルとしてバンドルします。次のような `webpack.config.js` を用意し、webpack を実行します。
 
 ```js
 const path = require('path');
@@ -97,7 +97,9 @@ import utils2 from './utils2';
 
 上図をみると、`utils1.js` は3箇所から、`utils2.js` は2箇所からインポートされています。ここでは3箇所からインポートされている `utils1.js` を `common.bundle.js` というファイルにバンドルして参照するようにしていきましょう。
 
-先程作成した `webpack.config.js` に追記をおこない、webpackを実行します。
+ここでは [CommonsChunkPlugin](https://webpack.js.org/plugins/commons-chunk-plugin/) を利用します。このプラグインは webpack でバンドルをおこなう際、共通的に利用されているモジュールを見つけると、そのモジュールを抽出し、共通モジュールへバンドルしてくれます。
+
+先程作成した `webpack.config.js` に追記をおこない、webpack を実行します。
 
 ```js
 module.exports = {
@@ -127,7 +129,7 @@ module.exports = {
 
 ![](docs/images/after-bundled.png)
 
-ここまででバンドルファイルは作成されましたが、`common.bundle.js` はwebpackの実行によって作成されたファイルであり、webpackを実行する前には存在しなかったファイルです。つまりどこからもインポートされていないのでまだ使用できる状態にはありません。ここでは次のように `index.html` の `script` タグでロードして使用できるようにします。
+上図のようにバンドルファイルは作成されましたが、`common.bundle.js` は webpack の実行によって作成されたファイルであり、webpack を実行する前には存在しなかったファイルです。つまりどこからもインポートされていないのでまだ使用できる状態にはありません。ここでは次のように `index.html` の `script` タグでロードして使用できるようにします。
 
 ```html
 <head>
@@ -156,7 +158,7 @@ $ yarn install
 
 ### バンドルファイルの作成
 
-次のコマンドでwebpackが実行され、バンドルファイルが作成されます。
+次のコマンドで webpack が実行され、バンドルファイルが作成されます。
 
 ```console
 $ yarn build
