@@ -58,7 +58,7 @@ module.exports = {
 };
 ```
 
-実行結果としてアプリケーションが個別にバンドルされた次のようなファイルが生成されます。
+実行結果としてアプリケーションが個別にバンドルされ、次のようなファイルが生成されます。
 
 ![](docs/images/individual-bundled.png)
 
@@ -82,24 +82,26 @@ function loadApp(appName) {
 
 一般的なアプリケーションは複数のベンダーライブラリや自作ライブラリをインポートして使用します。今回のアプリケーションも同様に複数のライブラリをインポートしています。
 
-ただし現状は、複数のアプリケーションが共通的に利用するライブラリであっても個々のアプリケーションにバンドルされています。
-
 各アプリケーションは、次のようにモジュールをインポートしています。
 
 ![](docs/images/before-bundled.png)
 
-例として `app3.js` のソースファイルからインポートしている箇所を抜粋します。
+例として `app3.js` でライブラリをインポートしている箇所を抜粋します。
 
 ```js
 import utils1 from './utils1';
 import utils2 from './utils2';
 ```
 
-上図をみると、`utils1.js` は3箇所から、`utils2.js` は2箇所からインポートされています。ここでは3箇所からインポートされている `utils1.js` を `common.bundle.js` というファイルにバンドルして参照するようにしていきましょう。
+現状は複数のアプリケーションが共通的に利用するライブラリであっても、個々のアプリケーションが次のようにバンドルされてしまいます。
 
-ここでは [CommonsChunkPlugin](https://webpack.js.org/plugins/commons-chunk-plugin/) を利用します。このプラグインは webpack でバンドルをおこなう際、共通的に利用されているモジュールを見つけると、そのモジュールを抽出し、共通モジュールへバンドルしてくれます。
+![](docs/images/simple-bundled.png)
 
-先程作成した `webpack.config.js` に追記をおこない、webpack を実行します。
+この図をみると重複してバンドルされているファイルがあることに気がつくでしょう。ここでは3箇所で重複バンドルされている `utils1.js` を `common.bundle.js` というファイルにバンドルしていきましょう。
+
+今回は [CommonsChunkPlugin](https://webpack.js.org/plugins/commons-chunk-plugin/) を利用します。このプラグインは webpack でバンドルをおこなう際、共通的に利用されているモジュールを見つけると、そのモジュールを抽出し、共通モジュールへバンドルしてくれます。
+
+さきほど作成した `webpack.config.js` に追記をおこない、webpack を実行します。
 
 ```js
 module.exports = {
@@ -123,13 +125,15 @@ module.exports = {
 };
 ```
 
-結果として次のようなバンドルファイルが作成されます。`minChunks: 3` なので3箇所からインポートされている `utils1.js` のみが `common.bundle.js` にバンドルされ、それ以外の `utils2.js` と `utils3.js` はバンドルされません。
+結果として次のようなバンドルファイルが作成されます。`minChunks` には `3` が設定されているので、 3箇所からインポートされている `utils1.js` のみが `common.bundle.js` にバンドルされ、それ以外の `utils2.js` と `utils3.js` はバンドルされません。
 
-仮に `minChunks: 2` と設定した場合、`utils1.js` と `utils2.js` が `common.bundle.js` にバンドルされることになります。
+仮に `minChunks: 2` と設定した場合は、`utils1.js` と `utils2.js` が `common.bundle.js` にバンドルされることになります。
 
 ![](docs/images/after-bundled.png)
 
-上図のようにバンドルファイルは作成されましたが、`common.bundle.js` は webpack の実行によって作成されたファイルであり、webpack を実行する前には存在しなかったファイルです。つまりどこからもインポートされていないのでまだ使用できる状態にはありません。ここでは次のように `index.html` の `script` タグでロードして使用できるようにします。
+この図のようにバンドルファイルは作成されましたが、`common.bundle.js` は webpack の実行によって作成されたファイルであり、webpack を実行する前には存在しなかったファイルです。つまりどこからもインポートされていないのでまだ使用できる状態にはありません。
+
+そこで、アプリケーションの入り口である `index.html` の `script` タグで `common.bundle.js` をロードし、使用できるようにしましょう。
 
 ```html
 <head>
